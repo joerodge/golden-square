@@ -28,13 +28,37 @@ class UserInterface:
         ship_orientation = self._prompt("Vertical or horizontal? [vh]")
         ship_row = self._prompt("Which row?")
         ship_col = self._prompt("Which column?")
-        self._show("OK.")
-        self.game.place_ship(
+        correct_placement = self._check_ship_placement(
             length=int(ship_length),
-            orientation={"v": "vertical", "h": "horizontal"}[ship_orientation],
+            orientation=ship_orientation,
             row=int(ship_row),
             col=int(ship_col),
         )
+        if correct_placement:
+            self._show("OK.")
+            self.game.place_ship(
+                length=int(ship_length),
+                orientation={"v": "vertical", "h": "horizontal"}[ship_orientation],
+                row=int(ship_row),
+                col=int(ship_col),
+            )
+
+    def _check_ship_placement(self, length, orientation, row, col):
+        if length not in [ship.length for ship in self.game.unplaced_ships()]:
+            self._show("Incorrect ship length")
+            return False
+        if orientation not in 'vh':
+            self._show("Incorrect orientation: must be v or h")
+            return False
+        if row < 1 or row > self.game.rows:
+            self._show(f"Incorrect row: must be more than 1 and less than or equal to {self.game.rows}")
+            return False
+        if col < 1 or col > self.game.cols:
+            self._show(f"Incorrect column: must be more than 1 and less than or equal to {self.game.cols}")
+            return False
+        
+        return True
+            
 
     def _format_board(self):
         rows = []
