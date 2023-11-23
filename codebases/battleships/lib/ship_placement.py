@@ -4,6 +4,7 @@ class ShipPlacement:
         self.orientation = orientation
         self.row = row
         self.col = col
+        self.sunk = False
 
     def covers(self, row, col):
         if self.orientation == "vertical":
